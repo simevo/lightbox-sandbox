@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Axerve - Lightbox sandbox</title>    
+  </head>
+  <body>
+    
+  </body>
+</html>
+
+<script>
+  fetch('https://sandbox.gestpay.net/api/v1/payment/create/',
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({  
+        "shopLogin":"LightboxTest",
+        "amount":"27.30",
+        "currency":"EUR",
+        "shopTransactionID":"my-custom-id"
+      })
+    }
+  ).then(result => {
+    return result.json();
+  }).then(data => {
+    if(data.error.code !== "0") {
+      alert(data.error.description)
+    } else {
+      const paymentIdentity = {
+        paymentId: data.payload.paymentID,
+        paymentToken: data.payload.paymentToken
+      }
+    }
+  })
+</script>
