@@ -104,9 +104,9 @@ body {
         border: 1px solid #00B7FF; }
       .c-container .c-container__content .c-container__messages.error {
         display: block;
-        color: #920e1f;
-        background-color: #ea344a;
-        border: 1px solid #920e1f; }
+        color: #ca152b;
+        background-color: #ffcad0;
+        border: 1px solid #ca152b; }
     .c-container .c-container__content label {
       margin-right: 16px; }
     .c-container .c-container__content input, .c-container .c-container__content select {
