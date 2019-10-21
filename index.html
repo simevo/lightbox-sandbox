@@ -11,6 +11,7 @@
         <a href="http://api.gestpay.it">API</a>
       </div>
     </div>
+    <script src="https://sandbox.gestpay.net/pagam/javascript/axerve.js"></script>
   </body>
 </html>
 
@@ -39,6 +40,13 @@
         paymentId: data.payload.paymentID,
         paymentToken: data.payload.paymentToken
       }
+
+      axerve.lightBox.shop = "LightboxTest";
+      axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, response => {
+        console.log(response)
+      });
     }
   })
+
+
 </script>
