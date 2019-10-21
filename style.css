@@ -117,8 +117,11 @@ body {
       margin-top: 4px;
       border: 1px solid #bfd1db; }
     .c-container .c-container__content input[type='number'] {
-      padding: 0 8px;
+      padding: 0 16px;
       text-align: right; }
+      .c-container .c-container__content input[type='number']::-webkit-outer-spin-button, .c-container .c-container__content input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0; }
     .c-container .c-container__content button {
       height: 48px;
       background: #00b7ff;

@@ -58,8 +58,13 @@
       border: 1px solid #bfd1db;
     }
     input[type='number'] {
-      padding: 0 8px;
+      padding: 0 16px;
       text-align: right;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
     }
     button {
       height: 48px;
