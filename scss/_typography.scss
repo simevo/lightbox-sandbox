@@ -1,0 +1,75 @@
+$font-size-base: 17px;
+
+$weight-normal: 400;
+$weight-semibold: 500;
+$weight-bold: 700;
+
+//font face Averta
+ 
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_2_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_2_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_2_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_2_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_2_0.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+ 
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_3_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_3_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_3_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_3_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_3_0.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+ 
+
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_9_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_9_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_9_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_9_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_9_0.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+ 
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_A_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_A_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_A_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_A_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_A_0.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+ 
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_C_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_C_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_C_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_C_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_C_0.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+} 
+  
+@font-face {
+  font-family: 'AvertaPE';
+  src: url('assets/fonts/Averta/37B0E9_D_0.eot');
+  src: url('assets/fonts/Averta/37B0E9_D_0.eot?#iefix') format('embedded-opentype'),
+    url('assets/fonts/Averta/37B0E9_D_0.woff2') format('woff2'),
+    url('assets/fonts/Averta/37B0E9_D_0.woff') format('woff'),
+    url('assets/fonts/Averta/37B0E9_D_0.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+ 
