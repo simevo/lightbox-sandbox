@@ -10,43 +10,86 @@
         <a href="http://doc.gestpay.it">Documentazione</a>
         <a href="http://api.gestpay.it">API</a>
       </div>
+      <div class="c-container">
+        <div class="c-container__content">
+          <div class="c-container__inputs">
+            <div class="c-container__input">
+              <label>Amount</label>
+              <input type="number" value="5,00" name="amount" id="amount" min="0">
+            </div>
+            <div class="c-container__input currency">
+              <label>Currency</label>
+              <select name="currency" id="currency">
+                <option checked value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+          <button id="submitButton">Test Lightbox</button>
+          <div class="c-container__messages" id="box-risultato">
+            <b>Codice</b>: <span id="codice"></span><br>
+            <b>Messaggio</b>: <span id=messaggio></span>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="https://sandbox.gestpay.net/pagam/javascript/axerve.js"></script>
   </body>
 </html>
 
 <script>
-  fetch('https://sandbox.gestpay.net/api/v1/payment/create/',
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({  
-        "shopLogin":"LightboxTest",
-        "amount":"27.30",
-        "currency":"EUR",
-        "shopTransactionID":"my-custom-id"
-      })
-    }
-  ).then(result => {
-    return result.json();
-  }).then(data => {
-    if(data.error.code !== "0") {
-      alert(data.error.description)
-    } else {
-      const paymentIdentity = {
-        paymentId: data.payload.paymentID,
-        paymentToken: data.payload.paymentToken
+  const amountInput = document.getElementById("amount")
+  const currencyInput = document.getElementById("currency")
+  const button = document.getElementById("submitButton");
+  const boxRisultato = document.getElementById("box-risultato")
+  const codice = document.getElementById("codice")
+  const messaggio = document.getElementById("messaggio")
+
+  button.onclick = function() {
+    boxRisultato.classList.remove("error");
+    boxRisultato.classList.remove("success");
+
+    var amount = amountInput.value;
+    var currency = currencyInput.value
+  
+    fetch('https://sandbox.gestpay.net/api/v1/payment/create/',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({  
+          "shopLogin": "LightboxTest",
+          "amount": amount,
+          "currency": currency,
+          "shopTransactionID": "my-custom-id"
+        })
       }
+    ).then(result => {
+      return result.json();
+    }).then(data => {
+      if(data.error.code !== "0") {
+        alert(data.error.description)
+      } else {
+        const paymentIdentity = {
+          paymentId: data.payload.paymentID,
+          paymentToken: data.payload.paymentToken
+        }
 
-      axerve.lightBox.shop = "LightboxTest";
-      axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, response => {
-        console.log(response)
-      });
-    }
-  })
-
-
+        axerve.lightBox.shop = "LightboxTest";
+        axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, function(response) {
+          console.log(response)
+          if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK") {
+            boxRisultato.classList.add("error")
+            boxRisultato.classList.remove("success")
+            boxRisultato.innerHTML = "<b>Codice:</b> " + response.error.code +"<br><b>Messaggio:</b> " + response.error.description
+          } else {
+            boxRisultato.classList.add("success")
+            boxRisultato.classList.remove("error");
+            boxRisultato.innerHTML = "<b>paymentId:</b> " + response.paymentId +"<br><b>responseUrl:</b> <a href='" + response.responseURL + "'>" + response.responseURL + "</a>"
+          }
+        });
+      }
+    })
+  }
 </script>

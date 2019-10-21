@@ -1,41 +1,8 @@
-@import "typography";
-
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: #333;
 }
 
-.c-background {
-  height: 100vh;
-  width: 100vw;
-  font-family: 'AvertaPE';
-  .c-background__logo {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    height: 32;
-    width: 168px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('assets/axerve-logo.svg');
-  }
-  .c-background__links {
-    position: absolute;
-    right: 32px;
-    a {
-      color: #80a3b7;
-      font-size: 14px;
-      text-decoration: none;
-      & + a {
-        margin-left: 24px;
-      }
-    }
-    @media screen and (max-width: 500px) {
-      bottom: 32px;
-    }
-    @media screen and (min-width: 501px) {
-      top: 32px;
-    }
-  }
-}
+@import "typography", "background", "container";
