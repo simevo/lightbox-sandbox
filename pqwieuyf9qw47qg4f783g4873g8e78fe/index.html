@@ -114,8 +114,6 @@
     var isEdge = !isIE && !!window.StyleMedia;
     // Chrome 1 - 71
     var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-    // Blink engine detection
-    var isBlink = (isChrome || isOpera) && !!window.CSS;
 
     if(!isChrome && !(isOpera || isFirefox || isSafari || isIE || isEdge || isBlink)) {
       isChrome = true
@@ -127,8 +125,7 @@
       isSafari: isSafari,
       isIE: isIE,
       isEdge: isEdge,
-      isChrome: isChrome,
-      isBlink: isBlink
+      isChrome: isChrome
     }
   }
 </script>
