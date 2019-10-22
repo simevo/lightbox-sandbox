@@ -25,7 +25,7 @@
               </select>
             </div>
           </div>
-          <button id="submitButton">Test Lightbox</button>
+          <button id="submitButton" onclick="openSandbox();"=>Test Lightbox</button>
           <div class="c-container__messages" id="box-risultato">
             <b>Codice</b>: <span id="codice"></span><br>
             <b>Messaggio</b>: <span id=messaggio></span>
@@ -45,7 +45,11 @@
   const codice = document.getElementById("codice")
   const messaggio = document.getElementById("messaggio")
 
-  button.onclick = function() {
+  const browsers = getBrowser()
+  console.log(browsers)
+  
+
+  openSandbox = function() {
     boxRisultato.classList.remove("error");
     boxRisultato.classList.remove("success");
 
@@ -56,7 +60,7 @@
       {
         method: 'POST',
         headers: {
-          'Authorization': `apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=`,
+          'Authorization': 'apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({  
@@ -66,9 +70,9 @@
           "shopTransactionID": "my-custom-id"
         })
       }
-    ).then(result => {
+    ).then(function(result) {
       return result.json();
-    }).then(data => {
+    }).then(function(data) {
       if(data.error.code !== "0") {
         alert(data.error.description)
       } else {
@@ -92,5 +96,39 @@
         });
       }
     })
+
+  }
+  
+  button.onclick = openSandbox
+
+  function getBrowser() {
+    // Opera 8.0+
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    // Safari 3.0+ "[object HTMLElementConstructor]" 
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+    // Internet Explorer 6-11
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    // Edge 20+
+    var isEdge = !isIE && !!window.StyleMedia;
+    // Chrome 1 - 71
+    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    // Blink engine detection
+    var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+    if(!isChrome && !(isOpera || isFirefox || isSafari || isIE || isEdge || isBlink)) {
+      isChrome = true
+    }
+    
+    return {
+      isOpera: isOpera,
+      isFirefox: isFirefox,
+      isSafari: isSafari,
+      isIE: isIE,
+      isEdge: isEdge,
+      isChrome: isChrome,
+      isBlink: isBlink
+    }
   }
 </script>
