@@ -25,7 +25,7 @@
               </select>
             </div>
           </div>
-          <button id="submitButton" onclick="openSandbox();"=>Test Lightbox</button>
+          <button id="submitButton" onclick="callSandbox();"=>Test Lightbox</button>
           <div class="c-container__messages" id="box-risultato">
             <b>Codice</b>: <span id="codice"></span><br>
             <b>Messaggio</b>: <span id=messaggio></span>
@@ -46,10 +46,20 @@
   const messaggio = document.getElementById("messaggio")
 
   const browsers = getBrowser()
-  console.log(browsers)
-  
 
-  openSandbox = function() {
+  callSandbox = function() {
+    if(browsers.isIE) {
+      openSandboxIE()
+    } else {
+      openSandboxStandard()
+    }
+  }
+
+  openSandboxIE = function() {
+    alert("Al momento non funziona su IE")
+  }  
+
+  openSandboxStandard = function() {
     boxRisultato.classList.remove("error");
     boxRisultato.classList.remove("success");
 
@@ -115,7 +125,7 @@
     // Chrome 1 - 71
     var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
-    if(!isChrome && !(isOpera || isFirefox || isSafari || isIE || isEdge || isBlink)) {
+    if(!isChrome && !(isOpera || isFirefox || isSafari || isIE || isEdge)) {
       isChrome = true
     }
     
