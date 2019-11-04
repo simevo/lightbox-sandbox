@@ -62,15 +62,15 @@
       text-align: right;
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+        -webkit-appearance: none;
+        margin: 0;
+      }
     }
     button {
       height: 48px;
       background: #00b7ff;
       border-radius: 4px;
-      font-family: AvertaPE;
+      font-family: AvertaPE, Arial, Helvetica, sans-serif;
       font-size: 14px;
       line-height: 24px;
       align-items: center;

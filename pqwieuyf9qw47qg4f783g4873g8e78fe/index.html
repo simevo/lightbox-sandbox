@@ -25,7 +25,7 @@
               </select>
             </div>
           </div>
-          <button id="submitButton" onclick="callSandbox();"=>Test Lightbox</button>
+          <button id="submitButton" >Test Lightbox</button>
           <div class="c-container__messages" id="box-risultato">
             <b>Codice</b>: <span id="codice"></span><br>
             <b>Messaggio</b>: <span id=messaggio></span>
@@ -46,25 +46,66 @@
   const messaggio = document.getElementById("messaggio")
 
   const browsers = getBrowser()
-
-  callSandbox = function() {
-    if(browsers.isIE) {
-      openSandboxIE()
-    } else {
-      openSandboxStandard()
-    }
+  button.onclick = function() {
+    callSandbox()
   }
 
-  openSandboxIE = function() {
-    alert("Al momento non funziona su IE")
-  }  
-
-  openSandboxStandard = function() {
+  callSandbox = function() {
     boxRisultato.classList.remove("error");
     boxRisultato.classList.remove("success");
 
     var amount = amountInput.value;
     var currency = currencyInput.value
+
+    if(browsers.isIE) {
+      openSandboxIE(amount, currency)
+    } else {
+      openSandboxStandard(amount, currency)
+    }
+  }
+
+  manageLightbox = function(data) {
+    const paymentIdentity = {
+      paymentId: data.payload.paymentID,
+      paymentToken: data.payload.paymentToken
+    }
+
+    axerve.lightBox.shop = "LightboxTest";
+    axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, function(response) {
+      if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK") {
+        boxRisultato.classList.add("error")
+        boxRisultato.classList.remove("success")
+        boxRisultato.innerHTML = "<b>Codice:</b> " + response.error.code +"<br><b>Messaggio:</b> " + response.error.description
+      } else {
+        boxRisultato.classList.add("success")
+        boxRisultato.classList.remove("error");
+        boxRisultato.innerHTML = "<b>paymentId:</b> " + response.paymentId +"<br><b>responseUrl:</b> <a href='" + response.responseURL + "'>" + response.responseURL + "</a>"
+      }
+    });
+  }
+
+  openSandboxIE = function(amount, currency) {
+    var xhr = new XMLHttpRequest()
+
+    xhr.onreadystatechange = function(response) {
+      if (xhr.readyState === 4) {
+        manageLightbox(JSON.parse(xhr.responseText))
+      }
+    }
+
+    xhr.open('POST', 'https://sandbox.gestpay.net/api/v1/payment/create/', true)
+    xhr.setRequestHeader('Authorization', 'apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=')
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('Accept', 'application/json')
+    xhr.send(JSON.stringify({  
+      "shopLogin": "LightboxTest",
+      "amount": amount,
+      "currency": currency,
+      "shopTransactionID": "my-custom-id"
+    }))    
+  }  
+
+  openSandboxStandard = function(amount, currency) {
   
     fetch('https://sandbox.gestpay.net/api/v1/payment/create/',
       {
@@ -86,30 +127,11 @@
       if(data.error.code !== "0") {
         alert(data.error.description)
       } else {
-        const paymentIdentity = {
-          paymentId: data.payload.paymentID,
-          paymentToken: data.payload.paymentToken
-        }
-
-        axerve.lightBox.shop = "LightboxTest";
-        axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, function(response) {
-          console.log(response)
-          if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK") {
-            boxRisultato.classList.add("error")
-            boxRisultato.classList.remove("success")
-            boxRisultato.innerHTML = "<b>Codice:</b> " + response.error.code +"<br><b>Messaggio:</b> " + response.error.description
-          } else {
-            boxRisultato.classList.add("success")
-            boxRisultato.classList.remove("error");
-            boxRisultato.innerHTML = "<b>paymentId:</b> " + response.paymentId +"<br><b>responseUrl:</b> <a href='" + response.responseURL + "'>" + response.responseURL + "</a>"
-          }
-        });
+        manageLightbox(data)
       }
     })
 
   }
-  
-  button.onclick = openSandbox
 
   function getBrowser() {
     // Opera 8.0+
