@@ -79,7 +79,9 @@ body {
     display: flex;
     flex-direction: column;
     min-width: 400px;
-    min-height: 300px; }
+    max-width: 400px;
+    min-height: 300px;
+    overflow: hidden; }
     .c-container .c-container__content .c-container__inputs {
       display: flex;
       flex-direction: row;
@@ -126,7 +128,7 @@ body {
       height: 48px;
       background: #00b7ff;
       border-radius: 4px;
-      font-family: AvertaPE;
+      font-family: AvertaPE, Arial, Helvetica, sans-serif;
       font-size: 14px;
       line-height: 24px;
       align-items: center;

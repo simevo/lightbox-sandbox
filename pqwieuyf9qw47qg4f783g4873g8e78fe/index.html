@@ -72,7 +72,8 @@
 
     axerve.lightBox.shop = "LightboxTest";
     axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, function(response) {
-      if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK") {
+      console.log(response);
+      if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK" && response.status !== "XX") {
         boxRisultato.classList.add("error")
         boxRisultato.classList.remove("success")
         boxRisultato.innerHTML = "<b>Codice:</b> " + response.error.code +"<br><b>Messaggio:</b> " + response.error.description

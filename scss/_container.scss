@@ -9,7 +9,9 @@
     display: flex;
     flex-direction: column;
     min-width: 400px;
+    max-width: 400px;
     min-height: 300px;
+    overflow: hidden;
     .c-container__inputs {
       display: flex;
       flex-direction: row;
