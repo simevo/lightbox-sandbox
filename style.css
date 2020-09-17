@@ -78,10 +78,13 @@ body {
   .c-container .c-container__content {
     display: flex;
     flex-direction: column;
-    min-width: 400px;
+    min-width: calc(100vw - 96px);
     max-width: 400px;
     min-height: 300px;
     overflow: hidden; }
+    @media screen and (min-width: 500px) {
+      .c-container .c-container__content {
+        min-width: 400px; } }
     .c-container .c-container__content .c-container__inputs {
       display: flex;
       flex-direction: row;
@@ -94,6 +97,14 @@ body {
           flex-grow: 1; }
         .c-container .c-container__content .c-container__inputs .c-container__input + .c-container__input {
           margin-left: 8px; }
+      @media screen and (max-width: 500px) {
+        .c-container .c-container__content .c-container__inputs {
+          flex-direction: column; }
+          .c-container .c-container__content .c-container__inputs .c-container__input.currency {
+            flex-grow: 2;
+            margin-left: 0;
+            margin-top: 16px;
+            margin-bottom: 16px; } }
     .c-container .c-container__content .c-container__messages {
       padding: 8px;
       margin-top: 16px;
