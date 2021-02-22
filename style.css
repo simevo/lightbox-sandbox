@@ -154,5 +154,24 @@ body {
       outline: 0 none !important;
       touch-action: manipulation;
       cursor: pointer; }
+    .c-container .c-container__content a {
+      height: 48px;
+      background: #00b7ff;
+      border-radius: 4px;
+      font-family: AvertaPE, Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 48px;
+      align-items: center;
+      text-align: center;
+      text-transform: uppercase;
+      color: #fff;
+      border-color: #00b7ff;
+      vertical-align: middle;
+      white-space: nowrap;
+      text-decoration: none;
+      border: 1px solid transparent;
+      outline: 0 none !important;
+      touch-action: manipulation;
+      cursor: pointer; }
 
 /*# sourceMappingURL=style.css.map */

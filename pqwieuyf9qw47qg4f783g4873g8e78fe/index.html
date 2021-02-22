@@ -26,10 +26,10 @@
               </select>
             </div>
           </div>
-          <button id="submitButton" >Test Lightbox</button>
-          <div class="c-container__messages" id="box-risultato">
-            <b>Codice</b>: <span id="codice"></span><br>
-            <b>Messaggio</b>: <span id=messaggio></span>
+          <a id="popupButton" href="#" target="_blank">Test Lightbox popup</a>
+          <form id="boxRisultato" name="boxRisultato">
+            <b>Codice</b>: <input text disabled id="codice" name="codice" value="initial"><br>
+            <b>Messaggio</b>: <input text disabled id="messaggio" name="messaggio" value="initial">
           </div>
         </div>
       </div>
@@ -39,75 +39,58 @@
 </html>
 
 <script>
-  const amountInput = document.getElementById("amount")
-  const currencyInput = document.getElementById("currency")
-  const button = document.getElementById("submitButton");
-  const boxRisultato = document.getElementById("box-risultato")
-  const codice = document.getElementById("codice")
-  const messaggio = document.getElementById("messaggio")
+  var amountInput = document.getElementById("amount");
+  var currencyInput = document.getElementById("currency");
+  var popupButton = document.getElementById("popupButton");
 
-  const browsers = getBrowser()
-  button.onclick = function() {
-    callSandbox()
-  }
+  popupButton.onclick  = function() {
+    callSandbox();
+  };
 
   callSandbox = function() {
-    boxRisultato.classList.remove("error");
-    boxRisultato.classList.remove("success");
+    boxRisultato.codice.value = "";
+    boxRisultato.messaggio.value = "";
 
     var amount = amountInput.value;
-    var currency = currencyInput.value
+    var currency = currencyInput.value;
+    var transaction = "my-custom-id";
 
-    if(browsers.isIE) {
-      openSandboxIE(amount, currency)
-    } else {
-      openSandboxStandard(amount, currency)
+    popupButton.setAttribute('href', "index.html?amount=" + amount + '&currency=' + currency + '&transaction=' + transaction);
+    return true;
+  };
+
+  setOpener = function (key, value) {
+    if (window.opener && !window.opener.closed) {
+      window.opener.document.boxRisultato[key].value = value;
     }
-  }
+  };
+
+  console.log(window.opener)
+
+  callback = function(response) {
+    console.log(response);
+    if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK" && response.status !== "XX") {
+      setOpener("codice", response.error.code);
+      setOpener("messaggio", response.error.description);
+    } else {
+      setOpener("codice", "OK");
+      setOpener("messaggio", "paymentId: " + response.paymentId + " responseUrl: " + response.responseURL);
+    }
+    window.opener.focus();
+    window.close();
+  };
 
   manageLightbox = function(data) {
-    const paymentIdentity = {
+    var paymentIdentity = {
       paymentId: data.payload.paymentID,
       paymentToken: data.payload.paymentToken
-    }
+    };
 
     axerve.lightBox.shop = "LightboxTest";
-    axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, function(response) {
-      console.log(response);
-      if(response.error.code !== "0" && response.error.code !== null && response.status !== "OK" && response.status !== "XX") {
-        boxRisultato.classList.add("error")
-        boxRisultato.classList.remove("success")
-        boxRisultato.innerHTML = "<b>Codice:</b> " + response.error.code +"<br><b>Messaggio:</b> " + response.error.description
-      } else {
-        boxRisultato.classList.add("success")
-        boxRisultato.classList.remove("error");
-        boxRisultato.innerHTML = "<b>paymentId:</b> " + response.paymentId +"<br><b>responseUrl:</b> <a href='" + response.responseURL + "'>" + response.responseURL + "</a>"
-      }
-    });
-  }
+    axerve.lightBox.open(paymentIdentity.paymentId, paymentIdentity.paymentToken, callback, window);
+  };
 
-  openSandboxIE = function(amount, currency) {
-    var xhr = new XMLHttpRequest()
-
-    xhr.onreadystatechange = function(response) {
-      if (xhr.readyState === 4) {
-        manageLightbox(JSON.parse(xhr.responseText))
-      }
-    }
-
-    xhr.open('POST', 'https://sandbox.gestpay.net/api/v1/payment/create/', true)
-    xhr.setRequestHeader('Authorization', 'apikey TGlnaHRib3hUZXN0IyNlc2VyY2VudGUgcGVyIHRlc3Qgc3UgbGlnaHRib3gjIzE4LzEwLzIwMTkgMTE6MDc6NDY=')
-    xhr.setRequestHeader('Content-Type', 'application/json')
-    xhr.setRequestHeader('Accept', 'application/json')
-    xhr.send(JSON.stringify({  
-      "shopLogin": "LightboxTest",
-      "amount": amount,
-      "currency": currency,
-      "shopTransactionID": "my-custom-id"
-    }))    
-  }  
-
-  openSandboxStandard = function(amount, currency) {
+  openSandbox = function(amount, currency, transaction) {
   
     fetch('https://sandbox.gestpay.net/api/v1/payment/create/',
       {
@@ -120,46 +103,28 @@
           "shopLogin": "LightboxTest",
           "amount": amount,
           "currency": currency,
-          "shopTransactionID": "my-custom-id"
+          "shopTransactionID": transaction
         })
       }
     ).then(function(result) {
       return result.json();
     }).then(function(data) {
       if(data.error.code !== "0") {
-        alert(data.error.description)
+        alert(data.error.description);
       } else {
-        manageLightbox(data)
+        manageLightbox(data);
       }
-    })
+    });
 
+  };
+
+  var queryString = window.location.search;
+  var urlParams = new URLSearchParams(queryString);
+  if (urlParams.has('amount') && urlParams.has('currency')) {
+    var amount = urlParams.get('amount');
+    var currency = urlParams.get('currency');
+    var transaction = urlParams.get('transaction');
+    openSandbox(amount, currency, transaction);
   }
 
-  function getBrowser() {
-    // Opera 8.0+
-    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    // Firefox 1.0+
-    var isFirefox = typeof InstallTrigger !== 'undefined';
-    // Safari 3.0+ "[object HTMLElementConstructor]" 
-    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-    // Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
-    // Edge 20+
-    var isEdge = !isIE && !!window.StyleMedia;
-    // Chrome 1 - 71
-    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-
-    if(!isChrome && !(isOpera || isFirefox || isSafari || isIE || isEdge)) {
-      isChrome = true
-    }
-    
-    return {
-      isOpera: isOpera,
-      isFirefox: isFirefox,
-      isSafari: isSafari,
-      isIE: isIE,
-      isEdge: isEdge,
-      isChrome: isChrome
-    }
-  }
 </script>
