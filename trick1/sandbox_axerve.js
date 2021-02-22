@@ -75,19 +75,16 @@ axerve.lightBox.open = function (paymentID, paymentToken, callBackObj,windowRefe
     }
     if (paymentToken != null || paymentToken != undefined) {
         if (paymentToken.length > 0) {
-            if (axerve.lightBox.requestType != 'Mobile'){
-				if(axerve.lightBox.HTMLElement != null){
-					if(confirm('Payment under process. Click OK to abort current Payment and start new Payment.'))
-					{
-						closeLightBox();
-						openlightBox();
-					}
-					else { console.log('continue'); }
-				}
-				else openlightBox();
-			}
-            else
-                redirectToMobile(windowReferenceObj);
+            if(axerve.lightBox.HTMLElement != null) {
+                if(confirm('Payment under process. Click OK to abort current Payment and start new Payment.')) {
+                    closeLightBox();
+                    openlightBox();
+                } else {
+                    console.log('continue');
+                }
+            } else {
+              openlightBox();
+            }
         }
         else {
             if (axerve.debug) console.log('[Axerve.JS] paymentToken is empty or Null');
@@ -140,29 +137,6 @@ function openlightBox() {
         }
     }
 }
-function redirectToMobile(windowReferenceObj) {
-    try {
-        if (axerve.debug) console.log('[Axerve.JS] Redirecting to Mobile');
-        axerve.mobile.URL = axerve.mobile.AbsUrl + '?paymentID=' + encodeURIComponent(axerve.lightBox.paymentID) + '&paymentToken=' + encodeURIComponent(axerve.lightBox.paymentToken) + '&shopLogin=' + encodeURIComponent(axerve.lightBox.shop)+ '&lightBox=true';
-         if(typeof windowReferenceObj != 'undefined' && windowReferenceObj)
-		{
-			windowReferenceObj.location=axerve.mobile.URL;
-			
-		}
-		else
-		window.open(axerve.mobile.URL);
-	
-    }
-    catch(err) {
-        if (axerve.debug) console.log('[Axerve.JS] Mobile Payment page cannot be Opened');
-        if (!(typeof callBackObj === 'undefined')) {
-            axerve.lightBox.response.error.code = '9991';
-            axerve.lightBox.response.error.description = 'Browser Not Supported';
-            axerve.lightBox.response.payLoad = null;
-            axerve.lightBox.open.callBackObj(axerve.lightBox.response);
-        }
-    }
-}
 
 if (window.addEventListener) {
     window.addEventListener('message', receiver, false);
@@ -205,8 +179,12 @@ function createiFrame() {
     try {
         createLightBoxContainer();
         createIframe();
-        createLightBoxFooter();
-        addLightBoxStyles();
+        if (axerve.lightBox.requestType == 'Desktop') {
+            createLightBoxFooter();
+            addLightBoxStyles();
+        } else {
+            addLightBoxStylesMobile();
+        }
         return true;
     }
     catch(err){
@@ -218,13 +196,15 @@ function createLightBoxContainer() {
     axerve.lightBox.HTMLElement.id = 'axerve_lightBox';
     axerve.lightBox.HTMLElement.className = 'overlay';
     document.getElementsByTagName('body')[0].appendChild(axerve.lightBox.HTMLElement);
-	createLightBoxHiddenBtn();
-    axerve.lightBox.iFrmContainer = document.createElement('div');
-    axerve.lightBox.iFrmContainer.id = 'axerve_lightBox_Container';
-    axerve.lightBox.iFrmContainer.className = 'lightBox_Container';
-    axerve.lightBox.HTMLElement.appendChild(axerve.lightBox.iFrmContainer);
-
-    
+    createLightBoxHiddenBtn();
+    if (axerve.lightBox.requestType == 'Desktop') {
+        axerve.lightBox.iFrmContainer = document.createElement('div');
+        axerve.lightBox.iFrmContainer.id = 'axerve_lightBox_Container';
+        axerve.lightBox.iFrmContainer.className = 'lightBox_Container';
+        axerve.lightBox.HTMLElement.appendChild(axerve.lightBox.iFrmContainer);
+    } else {
+        axerve.lightBox.iFrmContainer = axerve.lightBox.HTMLElement;
+    }
 }
 function createIframe() {
     axerve.lightBox.iFrame = document.createElement("iframe");
@@ -244,6 +224,13 @@ function addLightBoxStyles() {
     var docStyles = document.createElement('style');
     docStyles.type = 'text/css';
     var css = '.overlay { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); visibility: hidden; } .overlay:target { visibility: visible; opacity: 1; } .lightBox_Container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } .footerDiv { font-family: "Helvetica Neue" ,Helvetica,Arial,sans-serif; margin-top:2%; justify-content:center; display:flex; } .footerImg { margin-top:0px; margin-right:10px; height:10px; } .footerlbl { font-weight: 400; font-size: 15px; color: white; } .ifrm { border:0px; border-radius:10px; height: 665px; width: 400px; min-height: 665px; max-height: 693px; overflow:hidden; background-color:white; }';
+    docStyles.appendChild(document.createTextNode(css));
+    document.getElementsByTagName('head')[0].appendChild(docStyles);
+}
+function addLightBoxStylesMobile() {
+    var docStyles = document.createElement('style');
+    docStyles.type = 'text/css';
+    var css = '.overlay { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); visibility: hidden; overflow:auto; } .overlay:target { visibility: visible; opacity: 1; } .lightBox_Container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } .footerDiv { font-family: "Helvetica Neue" ,Helvetica,Arial,sans-serif; margin-top:2%; justify-content:center; display:flex; } .footerImg { margin-top:0px; margin-right:10px; height:10px; } .footerlbl { font-weight: 400; font-size: 15px; color: white; } .ifrm { border:0px; border-radius:10px; height: 665px; width: 100%; min-height: 665px; max-height: 693px; overflow:auto; background-color:white; }';
     docStyles.appendChild(document.createTextNode(css));
     document.getElementsByTagName('head')[0].appendChild(docStyles);
 }
